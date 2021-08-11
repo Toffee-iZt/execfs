@@ -43,6 +43,11 @@ func (f *FileAtOnce) Read(b []byte) (int, error) {
 	return n, nil
 }
 
+// ReadReset resets read offset.
+func (f *FileAtOnce) ReadReset() {
+	f.off = 0
+}
+
 // Close clears in memory file and returns bytes to the pool.
 func (f *FileAtOnce) Close() error {
 	f.name = ""
@@ -57,14 +62,10 @@ func (f *FileAtOnce) Write(b []byte) (int, error) {
 	n := len(b)
 	m := l
 	if n > c-l {
-		d := f.data[f.off:]
-		// can we just delete the readed data?
-		if n > c-f.off {
-			// not enough space anywhere, we need to allocate.
-			f.data = make([]byte, c*2+n)
-		}
-		m = copy(f.data, d)
-		f.off = 0
+		newdata := make([]byte, c*2+n)
+		m = copy(newdata, f.data)
+		atOncePool.Put(f.data[:0])
+		f.data = newdata
 	}
 	f.data = f.data[:m+n]
 	return copy(f.data[m:m+n], b), nil

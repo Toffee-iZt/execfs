@@ -1,2 +1,2 @@
-# execfs
-Golang current executable file system.
+# WORKFS
+Easy work with the executable directory, temporary directory and once-use files.

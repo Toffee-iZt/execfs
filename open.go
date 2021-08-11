@@ -1,4 +1,4 @@
-package execfs
+package workfs
 
 import (
 	"encoding/json"

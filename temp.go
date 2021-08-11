@@ -41,20 +41,28 @@ func GetWorkTemp() string {
 	return worktemp
 }
 
-var errHasSeparator = errors.New("suffix contains path separator")
-
-func tempPath(suffix string) (string, error) {
+func makeWorkTempDir() {
 	wconce.Do(func() {
-		worktemp = filepath.Join(tempdir, GetExecName())
+		worktemp = filepath.Join(tempdir, tempName(GetExecName()))
 		err := os.Mkdir(worktemp, 0700)
 		if err != nil {
 			panic(err)
 		}
 	})
+}
+
+var errHasSeparator = errors.New("suffix contains path separator")
+
+func tempPath(suffix string) (string, error) {
+	makeWorkTempDir()
 	for i := 0; i < len(suffix); i++ {
 		if os.IsPathSeparator(suffix[i]) {
 			return "", &os.PathError{Op: "createtemp", Path: suffix, Err: errHasSeparator}
 		}
 	}
-	return filepath.Join(worktemp, strconv.FormatInt(time.Now().UnixNano(), 10)+suffix), nil
+	return filepath.Join(worktemp, tempName(suffix)), nil
+}
+
+func tempName(suffix string) string {
+	return strconv.FormatInt(time.Now().UnixNano(), 10) + suffix
 }

@@ -28,7 +28,7 @@ func ReadFile(name string) ([]byte, error) {
 
 // WriteFile writes data to the file in the exec directory.
 func WriteFile(name string, data []byte) error {
-	return os.WriteFile(name, data, 0666)
+	return os.WriteFile(abs(name), data, 0666)
 }
 
 // LoadJSON opens and parses json file in the exec directory.

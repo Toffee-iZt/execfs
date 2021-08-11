@@ -13,7 +13,7 @@ var atOncePool = sync.Pool{
 	},
 }
 
-// OpenAtOnce open FileAtOnce.
+// OpenAtOnce opens FileAtOnce.
 func OpenAtOnce(name string) *FileAtOnce {
 	return &FileAtOnce{
 		name: name,

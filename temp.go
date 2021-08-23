@@ -1,4 +1,4 @@
-package workfs
+package wfs
 
 import (
 	"errors"
@@ -8,6 +8,20 @@ import (
 	"sync"
 	"time"
 )
+
+var tempdir = os.TempDir()
+var worktemp string
+var wconce sync.Once
+
+// GetTempDir returns the system temp directory.
+func GetTempDir() string {
+	return tempdir
+}
+
+// GetWorkTemp returns the working temp directory.
+func GetWorkTemp() string {
+	return worktemp
+}
 
 // CreateTemp creates temp file.
 func CreateTemp(suffix string) (*os.File, error) {
@@ -25,20 +39,6 @@ func CreateTempDir(suffix string) (string, error) {
 		return "", err
 	}
 	return path, os.Mkdir(path, 0700)
-}
-
-var tempdir = os.TempDir()
-var worktemp string
-var wconce sync.Once
-
-// GetTempDir returns the system temp directory.
-func GetTempDir() string {
-	return tempdir
-}
-
-// GetWorkTemp returns the working temp directory.
-func GetWorkTemp() string {
-	return worktemp
 }
 
 func makeWorkTempDir() {

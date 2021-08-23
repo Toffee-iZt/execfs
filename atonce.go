@@ -1,4 +1,4 @@
-package workfs
+package wfs
 
 import (
 	"io"

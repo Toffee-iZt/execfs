@@ -1,3 +1,3 @@
-module github.com/Toffee-iZt/workfs
+module github.com/Toffee-iZt/wfs
 
 go 1.16

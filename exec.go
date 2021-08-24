@@ -58,8 +58,8 @@ func ReadDir(name string) ([]fs.DirEntry, error) {
 	return f.ReadDir(-1)
 }
 
-// Open opens file in the exec directory.
-func Open(name string) (fs.File, error) {
+// ExecOpen opens file in the exec directory.
+func ExecOpen(name string) (fs.File, error) {
 	return OpenOS(name)
 }
 
@@ -89,7 +89,7 @@ func WriteFile(name string, data []byte) error {
 
 // LoadJSON opens and parses json file in the exec directory.
 func LoadJSON(name string, dst interface{}) error {
-	f, err := Open(name)
+	f, err := ExecOpen(name)
 	if err != nil {
 		return err
 	}

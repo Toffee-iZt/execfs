@@ -5,6 +5,7 @@ import (
 	sysfs "io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 	"syscall"
 )
 
@@ -23,12 +24,10 @@ type File interface {
 	io.Reader
 	io.ReaderAt
 	io.Writer
-	io.WriterAt
 	io.Seeker
 	io.Closer
 	Name() string
 	Stat() (sysfs.FileInfo, error)
-	Sync() error
 	Truncate(int64) error
 }
 
@@ -97,4 +96,18 @@ func RemoveAll(fs Filesystem, path string) error {
 		return nil
 	}
 	return err
+}
+
+// SplitPath cleans and split path.
+func SplitPath(path string) []string {
+	path = filepath.Clean(path)
+	parts := strings.Split(path, string(os.PathSeparator))
+	for i := 0; i < len(parts); i++ {
+		p := parts[i]
+		if p == "" {
+			copy(parts[i:], parts[i+1:])
+			parts = parts[:len(parts)-1]
+		}
+	}
+	return parts
 }

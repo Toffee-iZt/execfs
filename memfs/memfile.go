@@ -98,7 +98,7 @@ func (fd *MemFile) Stat() (fs.FileInfo, error) {
 		name:    fd.f.name,
 		size:    fd.f.size(),
 		modTime: fd.f.modTime,
-		mode:    fd.f.perm,
+		mode:    fd.f.mode,
 	}, nil
 }
 
@@ -114,14 +114,14 @@ var ErrNotRegular = errors.New("file is not regular")
 
 type file struct {
 	name     string
-	perm     fs.FileMode
+	mode     fs.FileMode
 	data     []byte
 	children []*file
 	modTime  time.Time
 }
 
 func (f *file) isDir() bool {
-	return f.perm.IsDir()
+	return f.mode.IsDir()
 }
 
 func (f *file) size() int64 {
@@ -129,7 +129,7 @@ func (f *file) size() int64 {
 }
 
 func (f *file) grow(n int64) (int64, error) {
-	l := int64(len(f.data))
+	l := f.size()
 	c := int64(cap(f.data))
 	if n > c-l {
 		newdata := make([]byte, c*2+n)

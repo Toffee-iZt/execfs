@@ -8,6 +8,11 @@ import (
 
 var _ Filesystem = &osfs{}
 
+// OpenOS opens os file as Filesystem.
+func OpenOS(dir string) Filesystem {
+	return &osfs{dir: dir}
+}
+
 type osfs struct {
 	dir string
 }

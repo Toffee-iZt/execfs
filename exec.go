@@ -35,7 +35,3 @@ func GetExecName() string {
 func GetExecFS() Filesystem {
 	return OpenOS(execDir)
 }
-
-func abs(name string) string {
-	return filepath.Join(execDir, name)
-}

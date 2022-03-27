@@ -1,11 +1,11 @@
 package wfs
 
 import (
+	"hash/crc32"
+	"io"
 	"os"
 	"path/filepath"
-	"strconv"
 	"sync"
-	"time"
 )
 
 var once sync.Once
@@ -16,26 +16,38 @@ func OSTempDir() string {
 	return os.TempDir()
 }
 
-func tempName(suffix string) string {
-	return strconv.FormatInt(time.Now().UnixNano(), 10) + suffix
+// OSTempFS returns the system temp directory.
+func OSTempFS() Filesystem {
+	return OpenOS(OSTempDir())
 }
 
-// GetWorkTempDir returns the working temp directory.
-func GetWorkTempDir(suffix string) string {
+// WorkTempDir returns the working temp directory.
+func WorkTempDir(suffix string) string {
 	once.Do(func() {
 		if suffix == "" {
-			suffix = GetExecName()
+			suffix = ExecName()
 		}
-		worktemp = filepath.Join(OSTempDir(), tempName(suffix))
-		err := os.Mkdir(worktemp, 0700)
+		f, err := ExecFS().OpenFile(ExecName(), os.O_RDONLY, 0)
 		if err != nil {
+			panic(err)
+		}
+
+		h := crc32.NewIEEE()
+		if _, err := io.Copy(h, f); err != nil {
+			panic(err)
+		}
+		f.Close()
+
+		path := filepath.Join(OSTempDir(), ExecName()+string(h.Sum(nil)))
+		err = os.Mkdir(path, 0700)
+		if !os.IsExist(err) {
 			panic(err)
 		}
 	})
 	return worktemp
 }
 
-// GetTempFS returns temp filesystem.
-func GetTempFS() Filesystem {
-	return OpenOS(GetWorkTempDir(""))
+// TempFS returns the temp filesystem for current executable.
+func TempFS() Filesystem {
+	return OpenOS(WorkTempDir(""))
 }

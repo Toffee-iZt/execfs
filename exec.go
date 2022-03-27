@@ -16,22 +16,22 @@ func init() {
 	execDir, execName = filepath.Split(exec)
 }
 
-// GetExec returns the path to the executable file.
-func GetExec() string {
+// ExecPath returns the path to the executable file.
+func ExecPath() string {
 	return exec
 }
 
-// GetExecDir returns the directory of the excutable file.
-func GetExecDir() string {
+// ExecDir returns the directory of the excutable file.
+func ExecDir() string {
 	return execDir
 }
 
-// GetExecName returns the name of the excutable file.
-func GetExecName() string {
+// ExecName returns the name of the excutable file.
+func ExecName() string {
 	return execName
 }
 
-// GetExecFS returns executable filesystem.
-func GetExecFS() Filesystem {
+// ExecFS returns executable filesystem.
+func ExecFS() Filesystem {
 	return OpenOS(execDir)
 }

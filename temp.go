@@ -22,12 +22,12 @@ func OSTempFS() Filesystem {
 }
 
 // WorkTempDir returns the working temp directory.
-func WorkTempDir(suffix string) string {
+func WorkTempDir(prefix string) string {
 	once.Do(func() {
-		if suffix == "" {
-			suffix = ExecName()
+		if prefix == "" {
+			prefix = ExecName()
 		}
-		f, err := ExecFS().OpenFile(ExecName(), os.O_RDONLY, 0)
+		f, err := ExecFS().Open(ExecName())
 		if err != nil {
 			panic(err)
 		}
@@ -38,7 +38,7 @@ func WorkTempDir(suffix string) string {
 		}
 		f.Close()
 
-		path := filepath.Join(OSTempDir(), ExecName()+string(h.Sum(nil)))
+		path := filepath.Join(OSTempDir(), prefix+string(h.Sum(nil)))
 		err = os.Mkdir(path, 0700)
 		if !os.IsExist(err) {
 			panic(err)

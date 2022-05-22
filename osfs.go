@@ -44,3 +44,19 @@ func (f *osfs) Stat(name string) (fs.FileInfo, error) {
 func (f *osfs) ReadDir(name string) ([]fs.DirEntry, error) {
 	return os.ReadDir(f.abs(name))
 }
+
+func (f *osfs) Open(name string) (File, error) {
+	return os.Open(f.abs(name))
+}
+
+func (f *osfs) Create(name string) (File, error) {
+	return os.Create(f.abs(name))
+}
+
+func (f *osfs) MkdirAll(path string, perm fs.FileMode) error {
+	return os.MkdirAll(f.abs(path), perm)
+}
+
+func (f *osfs) RemoveAll(path string) error {
+	return os.RemoveAll(f.abs(path))
+}

@@ -12,6 +12,7 @@ import (
 type Filesystem interface {
 	Open(name string) (File, error)
 	OpenFile(name string, flag int, perm fs.FileMode) (File, error)
+	ChangeDir(name string) Filesystem
 	Create(name string) (File, error)
 	Remove(name string) error
 	RemoveAll(path string) error

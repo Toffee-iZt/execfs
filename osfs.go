@@ -25,6 +25,10 @@ func (f *osfs) OpenFile(name string, flag int, perm fs.FileMode) (File, error) {
 	return os.OpenFile(f.abs(name), flag, perm)
 }
 
+func (f *osfs) ChangeDir(name string) Filesystem {
+	return &osfs{dir: f.abs(name)}
+}
+
 func (f *osfs) Remove(name string) error {
 	return os.Remove(f.abs(name))
 }

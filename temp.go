@@ -16,12 +16,12 @@ func OSTempDir() string {
 	return os.TempDir()
 }
 
-// OSTempFS returns the system temp directory.
+// OSTempFS returns the system temp directory as Filesystem.
 func OSTempFS() Filesystem {
 	return OpenOS(OSTempDir())
 }
 
-// WorkTempDir returns the working temp directory.
+// WorkTempDir creates and returns the working temp directory.
 func WorkTempDir(prefix string) string {
 	once.Do(func() {
 		if prefix == "" {
